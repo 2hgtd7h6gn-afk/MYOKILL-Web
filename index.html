@@ -130,7 +130,7 @@
             box-shadow: 8px 8px 0px rgba(0,0,0,1);
         }
 
-        /* EFECTO GRUNGE */
+        /* EFECTO GRUNGE - Colores Originales Restaurados */
         .grunge-text {
             transform: skew(-10deg) rotate(-1deg);
             display: inline-block;
@@ -140,16 +140,14 @@
 </head>
 <body class="antialiased selection:bg-red-600 selection:text-white">
 
-    <!-- REPRODUCTOR DE AUDIO -->
-    <!-- IMPORTANTE: El nombre del archivo debe ser exacto. Si tiene espacios, usa %20 -->
+    <!-- REPRODUCTOR DE AUDIO OCULTO -->
     <audio id="bg-audio" loop>
-        <source src="Capricho%20Intro.mp3" type="audio/mpeg">
+        <source src="Capricho Intro.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Botón de Música Flotante -->
-    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-white border-2 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_var(--punk-red)] hover:shadow-[2px_2px_0px_var(--punk-red)] hover:translate-y-1 transition-all duration-300 group" title="Activar/Desactivar Música">
-        <!-- Icono inicial tachado porque el audio empieza en silencio -->
-        <i id="music-icon" class="fa-solid fa-volume-xmark text-xl text-black group-hover:text-red-600 transition-colors"></i>
+    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white border-2 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_var(--punk-red)] hover:shadow-[2px_2px_0px_var(--punk-red)] hover:translate-y-1 transition-all duration-300 group" title="Activar/Desactivar Música">
+        <i class="fa-solid fa-volume-xmark text-lg group-hover:text-red-600 transition-colors"></i>
     </button>
 
     <!-- Navegación -->
@@ -230,11 +228,12 @@
                     
                     <div class="mt-8">
                         <div class="border border-red-600 p-6 inline-block w-full">
-                            <p class="text-lg md:text-xl tracking-widest text-gray-300 mb-3">
-                                GÉNERO: <span class="text-white font-black text-xl md:text-2xl">PUNK / GRUNGE / ALTERNATIVE ROCK</span>
+                            <!-- GÉNERO Y ORIGEN ACTUALIZADOS CON MÁS ROJO Y MENOS ESPACIO -->
+                            <p class="text-lg md:text-xl text-gray-300 mb-3 font-bold uppercase">
+                                GÉNERO: <span class="text-white font-black text-xl md:text-2xl tracking-normal">PUNK <span class="text-red-600 mx-1">/</span> GRUNGE <span class="text-red-600 mx-1">/</span> ALTERNATIVE ROCK</span>
                             </p>
-                            <p class="text-lg md:text-xl tracking-widest text-gray-300">
-                                ORIGEN: <span class="text-white font-black text-xl md:text-2xl">PUERTO RICO</span>
+                            <p class="text-lg md:text-xl text-gray-300 font-bold uppercase">
+                                ORIGEN: <span class="text-white font-black text-xl md:text-2xl tracking-normal">PUERTO RICO</span>
                             </p>
                         </div>
                         <p class="font-black italic mt-6 text-5xl md:text-7xl tracking-tighter uppercase leading-none">
@@ -432,28 +431,22 @@
 
         // Configuración de audio
         const audio = document.getElementById('bg-audio');
-        const musicIcon = document.getElementById('music-icon');
-        const musicBtn = document.getElementById('music-toggle');
-
         if (audio) {
             audio.volume = 0.25; // 25% Volumen
         }
 
         // Control de música
+        const musicBtn = document.getElementById('music-toggle');
         if (musicBtn && audio) {
             musicBtn.addEventListener('click', () => {
                 if (audio.paused) {
                     audio.play();
-                    musicIcon.classList.remove('fa-volume-xmark');
-                    musicIcon.classList.add('fa-volume-high');
-                    musicIcon.classList.add('text-red-600');
-                    musicIcon.classList.remove('text-black');
+                    musicBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                    musicBtn.classList.add('text-red-600');
                 } else {
                     audio.pause();
-                    musicIcon.classList.remove('fa-volume-high');
-                    musicIcon.classList.add('fa-volume-xmark');
-                    musicIcon.classList.remove('text-red-600');
-                    musicIcon.classList.add('text-black');
+                    musicBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                    musicBtn.classList.remove('text-red-600');
                 }
             });
         }
