@@ -206,7 +206,7 @@
                 <img src="MYO_LOGO_T.png" alt="MYŌ KILL Official Logo" class="w-80 md:w-[40rem] h-auto mx-auto floating-logo object-contain">
             </div>
             
-            <!-- ELIMINADO EL TÍTULO "MYŌ KILL" DEBAJO DEL LOGO -->
+            <!-- ELIMINADO: Título H1 "MYŌ KILL" que estaba aquí -->
             
             <p data-aos="fade-up" data-aos-delay="200" class="text-xl md:text-2xl font-bold text-black mb-12 tracking-[0.3em] uppercase px-4 py-2">
                 Punk <span class="text-red-600">•</span> Grunge <span class="text-red-600">•</span> Covers
@@ -234,9 +234,8 @@
             <div class="md:w-1/2" data-aos="fade-right">
                 <h2 class="text-5xl md:text-6xl font-black mb-8 uppercase italic text-red-600 tracking-tighter">Quiénes Somos</h2>
                 <div class="text-lg md:text-xl font-bold leading-relaxed space-y-6 text-gray-300 text-justify">
-                    <p class="border-l-4 border-white pl-4">Del junte de ideas y gustos musicales entre Carla y Carlos, a finales de 2023 nace <strong>MYŌ KILL</strong> con el propósito de traer de vuelta la energía cruda del Punk y el Grunge, entre otros géneros.</p>
-                    <p>Con una alineación sólida y un sonido directo lleno de actitud, la banda encuentra su carácter al frente con la voz de Carla, capaz de moverse entre tonos dulces y una voz rasposa que define cada tema.</p>
-                    <p>Desde venues locales hasta puntos clave de la escena en la isla, <strong>MYŌ KILL</strong> conecta con la gente a través de canciones originales y un repertorio de covers que se vive en tarima.</p>
+                    <p class="border-l-4 border-white pl-4">Para Carlos, la idea de crear un proyecto musical con una vocalista femenina al frente no era un simple deseo, sino una espina creativa que llevaba más de 20 años esperando su momento. En julio de 2023, sin buscar nada en particular, mientras navegaba por Facebook, apareció un live desde Manatí: una chica cantando en karaoke un tema de Iron Maiden. Bastaron unos segundos para que todo hiciera sentido. Esa era la voz.</p>
+                    <p>Movido por la intuición y sin pensarlo demasiado, Carlos decidió escribirle. Carla aceptó la invitación y, desde ese primer mensaje, el proyecto comenzó a respirar. Llegaron los ensayos, las ideas, el sonido, y en septiembre de 2023 MYŌ KILL subió por primera vez a tarima en Rock Out Café, Manatí. No fue solo un primer show; fue el inicio de algo que llevaba años esperando nacer</p>
                     <p class="italic text-white">Rock pa’ los que lo viven y los que lo descubren.</p>
                     
                     <div class="mt-8">
@@ -452,8 +451,41 @@
 
         // Configuración de audio
         const audio = document.getElementById('bg-audio');
+        const playlist = [
+            'audio.mp3', 
+            'audio2.mp3', 
+            'audio3.mp3', 
+            'audio4.mp3', 
+            'audio5.mp3'
+        ];
+        
+        let currentTrackIndex = -1;
+
+        // Función para cargar una pista aleatoria (evitando repetir la actual si es posible)
+        function loadRandomTrack() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * playlist.length);
+            } while (newIndex === currentTrackIndex && playlist.length > 1);
+            
+            currentTrackIndex = newIndex;
+            audio.src = playlist[currentTrackIndex];
+            audio.load();
+        }
+
         if (audio) {
             audio.volume = 0.25; // 25% Volumen
+            // Aseguramos que no tenga loop para detectar el final
+            audio.loop = false; 
+            
+            // Cargar pista inicial aleatoria
+            loadRandomTrack();
+
+            // Evento cuando termina una canción: cargar y reproducir la siguiente aleatoria
+            audio.addEventListener('ended', () => {
+                loadRandomTrack();
+                audio.play();
+            });
         }
 
         // Control de música
@@ -461,6 +493,10 @@
         if (musicBtn && audio) {
             musicBtn.addEventListener('click', () => {
                 if (audio.paused) {
+                    // Si no tiene fuente (por si acaso), cargar una
+                    if (!audio.src || audio.src === window.location.href) {
+                         loadRandomTrack();
+                    }
                     audio.play();
                     musicBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
                     musicBtn.classList.add('text-red-600');
