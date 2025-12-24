@@ -65,12 +65,24 @@
             box-shadow: 6px 6px 0px rgba(0, 0, 0, 1);
         }
 
+        /* CORRECCIÓN FINAL PARA GLITCH EN IMÁGENES */
         .line-up-card img {
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* Forzar aceleración de hardware para evitar parpadeos */
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-transform: translate3d(0, 0, 0); /* Usar translate3d es más robusto que translateZ */
+            transform: translate3d(0, 0, 0);
+            
+            /* Optimizar para cambios de filtro y transformación */
+            will-change: transform, filter; 
+            
+            /* Transición suave */
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.5s ease;
         }
 
         .line-up-card:hover img {
-            transform: scale(1.1);
+            /* Al hacer hover, mantenemos la aceleración */
+            transform: scale(1.1) translate3d(0, 0, 0);
         }
 
         ::-webkit-scrollbar { width: 10px; }
@@ -142,18 +154,19 @@
 
     <!-- REPRODUCTOR DE AUDIO OCULTO -->
     <audio id="bg-audio" loop>
-        <source src="Capricho Intro.mp3" type="audio/mpeg">
+        <source src="audio.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Botón de Música Flotante -->
+    <!-- Botón de Música Flotante (Minimalista) -->
     <button id="music-toggle" class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white border-2 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_var(--punk-red)] hover:shadow-[2px_2px_0px_var(--punk-red)] hover:translate-y-1 transition-all duration-300 group" title="Activar/Desactivar Música">
         <i class="fa-solid fa-volume-xmark text-lg group-hover:text-red-600 transition-colors"></i>
     </button>
 
     <!-- Navegación -->
-    <nav class="fixed w-full z-50 nav-solid py-4 px-6 md:px-12 flex justify-between items-center">
+    <nav class="fixed w-full z-50 nav-solid py-2 px-6 md:px-12 flex justify-between items-center">
         <div class="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-            <img src="MYO_LOGO.png" alt="MYŌ KILL Logo" class="w-10 h-auto object-contain" onerror="this.style.display='none'">
+            <!-- Asegúrate de que tu imagen se llame exactamente así -->
+            <img src="MYO_LOGO_T.png" alt="MYŌ KILL Logo" class="w-10 h-auto object-contain" onerror="this.style.display='none'">
             <span class="ml-2">MYŌ <span class="text-red-600 italic">KILL</span></span>
         </div>
         
@@ -181,23 +194,23 @@
     </nav>
 
     <!-- Sección Hero -->
-    <section id="inicio" class="min-h-screen flex items-center justify-center pt-20 hero-gradient relative overflow-hidden">
+    <section id="inicio" class="min-h-screen flex items-center justify-center pt-16 hero-gradient relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full opacity-[0.05] pointer-events-none select-none overflow-hidden">
             <div class="absolute -top-10 -left-10 text-[10rem] md:text-[20rem] font-black japanese-text text-gray-400">ミョー</div>
             <div class="absolute -bottom-10 -right-10 text-[10rem] md:text-[20rem] font-black japanese-text text-gray-400">キル</div>
         </div>
 
         <div class="container mx-auto px-6 text-center z-10 relative">
-            <div data-aos="zoom-in" data-aos-duration="1000" class="mb-8">
-                <img src="MYO_LOGO.png" alt="MYŌ KILL Official Logo" class="w-80 md:w-[40rem] h-auto mx-auto floating-logo object-contain">
+            <div data-aos="zoom-in" data-aos-duration="1000" class="mb-4">
+                <img src="MYO_LOGO_T.png" alt="MYŌ KILL Official Logo" class="w-80 md:w-[40rem] h-auto mx-auto floating-logo object-contain">
             </div>
             
             <h1 data-aos="fade-up" class="text-6xl md:text-9xl font-black tracking-tighter mb-4 uppercase drop-shadow-xl">
                 MYŌ <span class="text-red-600 text-stroke">KILL</span>
             </h1>
             
-            <p data-aos="fade-up" data-aos-delay="200" class="text-xl md:text-2xl font-bold text-black mb-12 tracking-[0.3em] uppercase bg-white/50 inline-block px-4 py-2 backdrop-blur-sm">
-                Punk • Grunge • Covers
+            <p data-aos="fade-up" data-aos-delay="200" class="text-xl md:text-2xl font-bold text-black mb-12 tracking-[0.3em] uppercase px-4 py-2">
+                Punk <span class="text-red-600">•</span> Grunge <span class="text-red-600">•</span> Covers
             </p>
             
             <div data-aos="fade-up" data-aos-delay="400">
@@ -222,18 +235,24 @@
             <div class="md:w-1/2" data-aos="fade-right">
                 <h2 class="text-5xl md:text-6xl font-black mb-8 uppercase italic text-red-600 tracking-tighter">Quiénes Somos</h2>
                 <div class="text-lg md:text-xl font-bold leading-relaxed space-y-6 text-gray-300 text-justify">
-                    <p class="border-l-4 border-white pl-4">Nacida a finales de 2023 de la visión compartida entre Carlos y Carla, <strong>MYŌ KILL</strong> ha llegado para revivir la energía del Punk y el Grunge.</p>
-                    <p>Tras consolidar su alineación con el poder de dos guitarras, la banda ha logrado un sonido único y contundente.</p>
-                    <p>Desde venues locales hasta el corazón de la escena en la isla, <strong>MYŌ KILL</strong> conecta con el público a través de los mejores covers de los 80, 90 y 00s, fusionando Rock en español, Hard Rock y Grunge. Más que una banda, una experiencia de sonido en vivo.</p>
+                    <p class="border-l-4 border-white pl-4">Del junte de ideas y gustos musicales entre Carla y Carlos, a finales de 2023 nace <strong>MYŌ KILL</strong> con el propósito de traer de vuelta la energía cruda del Punk y el Grunge, entre otros géneros.</p>
+                    <p>Con una alineación sólida y un sonido directo lleno de actitud, la banda encuentra su carácter al frente con la voz de Carla, capaz de moverse entre tonos dulces y una voz rasposa que define cada tema.</p>
+                    <p>Desde venues locales hasta puntos clave de la escena en la isla, <strong>MYŌ KILL</strong> conecta con la gente a través de canciones originales y un repertorio de covers que se vive en tarima.</p>
+                    <p class="italic text-white">Rock pa’ los que lo viven y los que lo descubren.</p>
                     
                     <div class="mt-8">
                         <div class="border border-red-600 p-6 inline-block w-full">
-                            <!-- GÉNERO Y ORIGEN ACTUALIZADOS CON MÁS ROJO Y MENOS ESPACIO -->
-                            <p class="text-lg md:text-xl text-gray-300 mb-3 font-bold uppercase">
-                                GÉNERO: <span class="text-white font-black text-xl md:text-2xl tracking-normal">PUNK <span class="text-red-600 mx-1">/</span> GRUNGE <span class="text-red-600 mx-1">/</span> ALTERNATIVE ROCK</span>
-                            </p>
-                            <p class="text-lg md:text-xl text-gray-300 font-bold uppercase">
-                                ORIGEN: <span class="text-white font-black text-xl md:text-2xl tracking-normal">PUERTO RICO</span>
+                            <!-- SECCIÓN DE GÉNERO ACTUALIZADA (HORIZONTAL) -->
+                            <div class="text-lg md:text-xl text-gray-300 mb-3 font-bold flex flex-wrap items-center gap-1.5 leading-tight">
+                                <span>GÉNERO:</span>
+                                <span class="text-red-600 font-black text-xl md:text-2xl">PUNK</span>
+                                <span class="text-white font-black text-xl md:text-2xl">/</span>
+                                <span class="text-red-600 font-black text-xl md:text-2xl">GRUNGE</span>
+                                <span class="text-white font-black text-xl md:text-2xl">/</span>
+                                <span class="text-red-600 font-black text-xl md:text-2xl">ALTERNATIVE COVERS</span>
+                            </div>
+                            <p class="text-lg md:text-xl text-gray-300 font-bold mt-4">
+                                ORIGEN: <span class="text-red-600 font-black text-xl md:text-2xl">PUERTO RICO</span>
                             </p>
                         </div>
                         <p class="font-black italic mt-6 text-5xl md:text-7xl tracking-tighter uppercase leading-none">
@@ -244,6 +263,7 @@
             </div>
             <div class="md:w-1/2 w-full" data-aos="fade-left">
                 <div class="border-4 border-white p-2 rotate-3 hover:rotate-0 transition duration-500 bg-white shadow-[10px_10px_0px_var(--punk-red)]">
+                    <!-- FOTO GRUPAL AJUSTADA -->
                     <div class="w-full flex flex-col items-center justify-center overflow-hidden relative group cursor-pointer">
                          <img src="MYOKILL.jpg" alt="MYŌ KILL Banda" class="w-full h-auto object-contain group-hover:scale-105 transition duration-500 block">
                     </div>
@@ -356,25 +376,25 @@
     <!-- Booking -->
     <section id="booking" class="py-32 bg-black text-white relative">
         <div class="container mx-auto px-6">
-            <div class="max-w-4xl mx-auto bg-white text-black p-8 md:p-16 border-8 border-red-600 shadow-[20px_20px_0px_rgba(255,255,255,0.2)]" data-aos="zoom-in">
-                <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase italic tracking-tighter">Lleva a MYŌ KILL a tu escenario</h2>
+            <div class="max-w-4xl mx-auto bg-white text-black p-6 md:p-10 border-8 border-red-600 shadow-[20px_20px_0px_rgba(255,255,255,0.2)]" data-aos="zoom-in">
+                <h2 class="text-3xl md:text-4xl font-black mb-4 uppercase italic tracking-tighter">LLEVA A MYŌ KILL A TU NEGOCIO O ACTIVIDAD</h2>
                 <p class="mb-12 font-bold text-gray-500 uppercase tracking-widest text-sm">Reserva tu fecha y nos pondremos en contacto.</p>
                 
-                <form id="contact-form" class="space-y-8">
+                <form id="contact-form" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <label class="block text-xs font-black uppercase mb-3 tracking-widest">Nombre / Org</label>
-                            <input type="text" name="name" required class="w-full p-4 bg-gray-50 font-bold text-lg" placeholder="EJ. CLUB PUNK ROCK">
+                            <label class="block text-xs font-black uppercase mb-3 tracking-widest">Nombre</label>
+                            <input type="text" name="name" required class="w-full p-4 bg-gray-50 font-bold text-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-black uppercase mb-3 tracking-widest">Email</label>
-                            <input type="email" name="email" required class="w-full p-4 bg-gray-50 font-bold text-lg" placeholder="CONTACTO@EMAIL.COM">
+                            <input type="email" name="email" required class="w-full p-4 bg-gray-50 font-bold text-lg">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <label class="block text-xs font-black uppercase mb-3 tracking-widest">Teléfono</label>
-                            <input type="tel" name="phone" required class="w-full p-4 bg-gray-50 font-bold text-lg" placeholder="+56 9 1234 5678">
+                            <input type="tel" name="phone" required class="w-full p-4 bg-gray-50 font-bold text-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-black uppercase mb-3 tracking-widest">Fecha</label>
@@ -384,14 +404,14 @@
                     <div>
                         <label class="block text-xs font-black uppercase mb-3 tracking-widest">Tipo de Evento</label>
                         <select name="type" class="w-full p-4 bg-gray-50 font-black uppercase text-sm cursor-pointer">
-                            <option value="venue">VENUE (CLUB / SALA)</option>
+                            <option value="venue">NEGOCIO</option>
                             <option value="privado">EVENTO PRIVADO</option>
                             <option value="otro">OTRO (FESTIVAL / ESPECIAL)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-black uppercase mb-3 tracking-widest">Detalles</label>
-                        <textarea name="message" rows="4" class="w-full p-4 bg-gray-50 font-bold text-lg" placeholder="CUÉNTANOS MÁS..."></textarea>
+                        <textarea name="message" rows="4" class="w-full p-4 bg-gray-50 font-bold text-lg"></textarea>
                     </div>
                     <button type="submit" class="btn-punk w-full py-6 font-black uppercase tracking-[0.3em] text-xl shadow-[8px_8px_0px_rgba(0,0,0,1)]">
                         ENVIAR SOLICITUD <i class="fa-solid fa-paper-plane ml-3"></i>
@@ -402,9 +422,9 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-16 bg-white border-t-8 border-black">
+    <footer class="py-8 bg-white border-t-8 border-black">
         <div class="container mx-auto px-6 flex flex-col items-center">
-            <img src="MYO_LOGO.png" alt="MYŌ KILL Logo" class="w-24 h-auto mb-8 object-contain">
+            <img src="MYO_LOGO_T.png" alt="MYŌ KILL Logo" class="w-24 h-auto mb-8 object-contain">
             
             <div class="flex space-x-8 md:space-x-12 mb-12 text-3xl">
                 <a href="https://youtube.com/channel/UCFyMWOUpaIPSW0jiZ09Pi9g?si=wNiTgI-5FU7hHzNx" class="hover:text-red-600 transition duration-300 transform hover:scale-125"><i class="fa-brands fa-youtube"></i></a>
@@ -502,5 +522,3 @@
     </script>
 </body>
 </html>
-
-
