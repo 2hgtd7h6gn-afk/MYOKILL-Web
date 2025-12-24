@@ -67,21 +67,15 @@
 
         /* CORRECCIÓN FINAL PARA GLITCH EN IMÁGENES */
         .line-up-card img {
-            /* Forzar aceleración de hardware para evitar parpadeos */
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            -webkit-transform: translate3d(0, 0, 0); /* Usar translate3d es más robusto que translateZ */
+            -webkit-transform: translate3d(0, 0, 0);
             transform: translate3d(0, 0, 0);
-            
-            /* Optimizar para cambios de filtro y transformación */
             will-change: transform, filter; 
-            
-            /* Transición suave */
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.5s ease;
         }
 
         .line-up-card:hover img {
-            /* Al hacer hover, mantenemos la aceleración */
             transform: scale(1.1) translate3d(0, 0, 0);
         }
 
@@ -154,7 +148,7 @@
 
     <!-- REPRODUCTOR DE AUDIO OCULTO -->
     <audio id="bg-audio">
-        <!-- El source se define en el script para aleatoriedad -->
+        <!-- El JS se encarga de cargar las canciones -->
     </audio>
 
     <!-- Botón de Música Flotante (Minimalista) -->
@@ -165,7 +159,6 @@
     <!-- Navegación -->
     <nav class="fixed w-full z-50 nav-solid py-2 px-6 md:px-12 flex justify-between items-center">
         <div class="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-            <!-- Asegúrate de que tu imagen se llame exactamente así -->
             <img src="MYO_LOGO_T.png" alt="MYŌ KILL Logo" class="w-10 h-auto object-contain" onerror="this.style.display='none'">
             <span class="ml-2">MYŌ <span class="text-red-600 italic">KILL</span></span>
         </div>
@@ -205,8 +198,6 @@
                 <img src="MYO_LOGO_T.png" alt="MYŌ KILL Official Logo" class="w-80 md:w-[40rem] h-auto mx-auto floating-logo object-contain">
             </div>
             
-            <!-- ELIMINADO: Título H1 "MYŌ KILL" que estaba aquí -->
-            
             <p data-aos="fade-up" data-aos-delay="200" class="text-xl md:text-2xl font-bold text-black mb-12 tracking-[0.3em] uppercase px-4 py-2">
                 Punk <span class="text-red-600">•</span> Grunge <span class="text-red-600">•</span> Covers
             </p>
@@ -239,9 +230,9 @@
                     
                     <div class="mt-8">
                         <div class="border border-red-600 p-6 inline-block w-full">
-                            <!-- SECCIÓN DE GÉNERO ACTUALIZADA (HORIZONTAL) -->
-                            <div class="text-lg md:text-xl text-gray-300 mb-3 font-bold flex flex-wrap items-center gap-1.5 leading-tight">
-                                <span>GÉNERO:</span>
+                            <!-- GÉNERO HORIZONTAL -->
+                            <div class="text-lg md:text-xl text-gray-300 mb-3 font-bold flex flex-wrap items-center gap-2 leading-tight">
+                                <span class="text-gray-300">GÉNERO:</span>
                                 <span class="text-red-600 font-black text-xl md:text-2xl">PUNK</span>
                                 <span class="text-white font-black text-xl md:text-2xl">/</span>
                                 <span class="text-red-600 font-black text-xl md:text-2xl">GRUNGE</span>
@@ -260,7 +251,6 @@
             </div>
             <div class="md:w-1/2 w-full" data-aos="fade-left">
                 <div class="border-4 border-white p-2 rotate-3 hover:rotate-0 transition duration-500 bg-white shadow-[10px_10px_0px_var(--punk-red)]">
-                    <!-- FOTO GRUPAL AJUSTADA -->
                     <div class="w-full flex flex-col items-center justify-center overflow-hidden relative group cursor-pointer">
                          <img src="MYOKILL.jpg" alt="MYŌ KILL Banda" class="w-full h-auto object-contain group-hover:scale-105 transition duration-500 block">
                     </div>
@@ -450,6 +440,7 @@
 
         // Configuración de audio
         const audio = document.getElementById('bg-audio');
+        // ARRAY CON LAS 5 CANCIONES
         const playlist = [
             'audio.mp3', 
             'audio2.mp3', 
@@ -463,9 +454,14 @@
         // Función para cargar una pista aleatoria (evitando repetir la actual si es posible)
         function loadRandomTrack() {
             let newIndex;
-            do {
-                newIndex = Math.floor(Math.random() * playlist.length);
-            } while (newIndex === currentTrackIndex && playlist.length > 1);
+            // Si solo hay una canción, no intentar buscar otra diferente
+            if (playlist.length <= 1) {
+                newIndex = 0;
+            } else {
+                do {
+                    newIndex = Math.floor(Math.random() * playlist.length);
+                } while (newIndex === currentTrackIndex);
+            }
             
             currentTrackIndex = newIndex;
             audio.src = playlist[currentTrackIndex];
@@ -474,7 +470,7 @@
 
         if (audio) {
             audio.volume = 0.25; // 25% Volumen
-            // Aseguramos que no tenga loop para detectar el final
+            // Aseguramos que no tenga loop para detectar el final y cambiar de canción
             audio.loop = false; 
             
             // Cargar pista inicial aleatoria
@@ -483,7 +479,7 @@
             // Evento cuando termina una canción: cargar y reproducir la siguiente aleatoria
             audio.addEventListener('ended', () => {
                 loadRandomTrack();
-                audio.play();
+                audio.play().catch(e => console.log("Reproducción automática bloqueada por el navegador"));
             });
         }
 
@@ -492,8 +488,8 @@
         if (musicBtn && audio) {
             musicBtn.addEventListener('click', () => {
                 if (audio.paused) {
-                    // Si no tiene fuente (por si acaso), cargar una
-                    if (!audio.src || audio.src === window.location.href) {
+                    // Si por alguna razón no tiene fuente cargada
+                    if (!audio.src || audio.src === "") {
                          loadRandomTrack();
                     }
                     audio.play();
