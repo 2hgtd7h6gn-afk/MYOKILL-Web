@@ -154,7 +154,7 @@
 
     <!-- REPRODUCTOR DE AUDIO OCULTO -->
     <audio id="bg-audio">
-        <!-- El JS se encarga de cargar las canciones -->
+        <!-- El source se define en el script para aleatoriedad -->
     </audio>
 
     <!-- Botón de Música Flotante (Minimalista) -->
@@ -204,6 +204,8 @@
             <div data-aos="zoom-in" data-aos-duration="1000" class="mb-4">
                 <img src="MYO_LOGO_T.png" alt="MYŌ KILL Official Logo" class="w-80 md:w-[40rem] h-auto mx-auto floating-logo object-contain">
             </div>
+            
+            <!-- ELIMINADO: Título H1 "MYŌ KILL" que estaba aquí -->
             
             <p data-aos="fade-up" data-aos-delay="200" class="text-xl md:text-2xl font-bold text-black mb-12 tracking-[0.3em] uppercase px-4 py-2">
                 Punk <span class="text-red-600">•</span> Grunge <span class="text-red-600">•</span> Covers
@@ -421,7 +423,10 @@
     <!-- Padding inferior extra (pb-24) para evitar que el botón de música tape el texto en móvil -->
     <footer class="py-8 pb-24 md:pb-8 bg-white border-t-8 border-black">
         <div class="container mx-auto px-6 flex flex-col items-center">
-            <img src="MYO_LOGO_T.png" alt="MYŌ KILL Logo" class="w-24 h-auto mb-8 object-contain">
+            <!-- AQUI EL CAMBIO: Logo con link para volver al inicio -->
+            <a href="#inicio" class="cursor-pointer transition-transform hover:scale-105">
+                <img src="MYO_LOGO_T.png" alt="MYŌ KILL Logo" class="w-24 h-auto mb-8 object-contain">
+            </a>
             
             <div class="flex space-x-8 md:space-x-12 mb-12 text-3xl">
                 <a href="https://youtube.com/channel/UCFyMWOUpaIPSW0jiZ09Pi9g?si=wNiTgI-5FU7hHzNx" class="hover:text-red-600 transition duration-300 transform hover:scale-125"><i class="fa-brands fa-youtube"></i></a>
@@ -450,7 +455,7 @@
         const audio = document.getElementById('bg-audio');
         // ARRAY CON LAS 5 CANCIONES
         const playlist = [
-            'audio.mp3', 
+            'Capricho Intro.mp3', 
             'audio2.mp3', 
             'audio3.mp3', 
             'audio4.mp3', 
@@ -472,6 +477,7 @@
             }
             
             currentTrackIndex = newIndex;
+            // Aseguramos que los espacios en los nombres de archivo se manejen bien
             audio.src = playlist[currentTrackIndex];
             audio.load();
         }
